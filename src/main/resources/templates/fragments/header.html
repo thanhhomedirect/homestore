@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+
+<header class="header1" th:fragment="header_info (vm)">
+    <!-- Header desktop -->
+    <div class="container-menu-header">
+        <div class="topbar">
+            <div class="topbar-social">
+                <a href="https://www.facebook.com/" class="topbar-social-item fa fa-facebook"></a>
+                <a href="https://www.instagram.com/" class="topbar-social-item fa fa-instagram"></a>
+                <a href="https://www.pinterest.com/" class="topbar-social-item fa fa-pinterest-p"></a>
+                <a href="https://www.snapchat.com/" class="topbar-social-item fa fa-snapchat-ghost"></a>
+                <a href="https://www.youtube.com/" class="topbar-social-item fa fa-youtube-play"></a>
+            </div>
+
+            <span class="topbar-child1">
+					Free shipping for standard order over $100
+				</span>
+
+            <div class="topbar-child2">
+					<span class="topbar-email">
+						diemhuong10897@gmail.com
+					</span>
+
+                <span class="topbar-phone-number">
+						(+1) 96 716 6879
+					</span>
+
+            </div>
+        </div>
+
+        <div class="wrap_header">
+            <!-- Logo -->
+            <a th:href="@{/}" class="logo">
+                <img th:src="@{/images/core-img/logo.png}" alt="IMG-LOGO">
+            </a>
+
+            <!-- Menu -->
+            <div class="wrap_menu">
+                <nav class="menu">
+                    <ul class="main_menu">
+                        <th:block  th:each="item : ${vm.getHeaderMenuVMArrayList()}">
+                            <li>
+                                <a th:href="${item.getLink()}" th:text="${item.getName()}"></a>
+                            </li>
+                        </th:block>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Header Icon -->
+            <div class="header-icons">
+                <div class="header-wrapicon1 mr-1">
+                    <div class="container m-0">
+                        <div class="d-flex justify-content-center">
+                            <form class="form-inline my-2 my-lg-0" th:action="@{/product}" th:object="${productname}" method="get">
+                            <div class="searchbar">
+                                <input class="search_input" type="search" name="" th:field="*{name}">
+                                <button class="search_icon"><i class="fa fa-search"></i></button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-wrapicon1 mr-4">
+                    <form class="form-inline my-2 my-lg-0" th:action="@{/}" method="get">
+                        <i class="fa fa-user-circle-o header-icon1 js-show-header-dropdown" aria-hidden="true" style="font-size: 27px;"></i>
+
+                        <div sec:authorize="isAnonymous()">
+                            <div class="header-cart header-dropdown">
+                                <ul class="header-cart-wrapitem">
+                                    <li class="header-cart-item">
+                                        <a class="dropdown-item" th:href="@{/order/history}">Order History</a>
+                                    </li>
+                                    <hr>
+                                    <li class="header-cart-item">
+                                        <a class="dropdown-item" th:href="@{/login}">Login</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div sec:authorize="isAuthenticated()">
+                            <div class="header-cart header-dropdown">
+                                <ul class="header-cart-wrapitem">
+                                    <li class="header-cart-item">
+                                        <a class="dropdown-item" th:href="@{/user/detail}">User Detail</a>
+                                    </li>
+                                    <li class="header-cart-item">
+                                        <a class="dropdown-item" th:href="@{/order/history}">Order History</a>
+                                    </li>
+                                    <hr>
+                                    <li class="header-cart-item">
+                                        <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <span th:inline="text">
+                                Hello [[${#httpServletRequest.remoteUser}]]!
+                            </span>
+                        </div>
+                    </form>
+                </div>
+
+                <div th:replace="fragments/mini_cart :: mini_cart_info (vm=${vm.getCartVM()})"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Mobile -->
+    <div class="wrap_header_mobile">
+        <!-- Logo moblie -->
+        <a th:href="@{/}" class="logo-mobile">
+            <img th:src="@{/images/core-img/logo.png}" alt="IMG-LOGO">
+        </a>
+
+        <!-- Button show menu -->
+        <div class="btn-show-menu">
+            <!-- Header Icon mobile -->
+            <div class="header-icons-mobile">
+                <div class="header-wrapicon1 mr-1">
+                    <div class="container m-0">
+                        <div class="d-flex justify-content-center">
+                            <form class="form-inline my-2 my-lg-0" th:action="@{/product}" th:object="${productname}" method="get">
+                                <div class="searchbar">
+                                    <input class="search_input" type="search" name="" placeholder="Search..." th:field="*{name}">
+                                    <button class="search_icon"><i class="fa fa-search"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-wrapicon1 mr-4">
+                    <form class="form-inline my-2 my-lg-0" th:action="@{/}" th:object="${productname}" method="get">
+                        <i class="fa fa-user-circle-o header-icon1 js-show-header-dropdown" aria-hidden="true" style="font-size: 27px;"></i>
+
+                        <div sec:authorize="isAnonymous()">
+                            <div class="header-cart header-dropdown">
+                                <ul class="header-cart-wrapitem">
+                                    <li class="header-cart-item">
+                                        <a class="dropdown-item" th:href="@{/order/history}">Order History</a>
+                                    </li>
+                                    <hr>
+                                    <li class="header-cart-item">
+                                        <a class="dropdown-item" th:href="@{/login}">Login</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div sec:authorize="isAuthenticated()">
+                            <div class="header-cart header-dropdown">
+                                <ul class="header-cart-wrapitem">
+                                    <li class="header-cart-item">
+                                        <a class="dropdown-item" th:href="@{/user/detail}">User Detail</a>
+                                    </li>
+                                    <li class="header-cart-item">
+                                        <a class="dropdown-item" th:href="@{/order/history}">Order History</a>
+                                    </li>
+                                    <hr>
+                                    <li class="header-cart-item">
+                                        <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <span th:inline="text">
+                                Chào [[${#httpServletRequest.remoteUser}]]!
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <div th:replace="fragments/mini_cart :: mini_cart_info (vm=${vm.getCartVM()})"></div>
+
+                </div>
+            </div>
+
+            <div class="btn-show-menu-mobile hamburger hamburger--squeeze">
+					<span class="hamburger-box">
+						<span class="hamburger-inner"></span>
+					</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Mobile -->
+    <div class="wrap-side-menu" >
+        <nav class="side-menu">
+            <ul class="main-menu">
+                <li class="item-topbar-mobile p-l-20 p-t-8 p-b-8">
+						<span class="topbar-child1">
+							Free shipping for standard order over $100
+						</span>
+                </li>
+
+                <li class="item-topbar-mobile p-l-20 p-t-8 p-b-8">
+                    <div class="topbar-child2-mobile">
+							<span class="topbar-email">
+								diemhuong10897@gmail.com
+							</span>
+
+                        <span class="topbar-phone-number">
+								(+1) 96 716 6879
+							</span>
+                    </div>
+                </li>
+
+                <li class="item-topbar-mobile p-l-10">
+                    <div class="topbar-social-mobile">
+                        <a href="https://www.facebook.com/" class="topbar-social-item fa fa-facebook"></a>
+                        <a href="https://www.instagram.com/" class="topbar-social-item fa fa-instagram"></a>
+                        <a href="https://www.pinterest.com/" class="topbar-social-item fa fa-pinterest-p"></a>
+                        <a href="https://www.snapchat.com/" class="topbar-social-item fa fa-snapchat-ghost"></a>
+                        <a href="https://www.youtube.com/" class="topbar-social-item fa fa-youtube-play"></a>
+                    </div>
+                </li>
+
+                <th:block  th:each="item : ${vm.getHeaderMenuVMArrayList()}">
+                    <li class="item-menu-mobile">
+                        <a th:href="${item.getLink()}" th:text="${item.getName()}"></a>
+                    </li>
+                </th:block>
+            </ul>
+        </nav>
+    </div>
+</header>
+</body>
+</html>
