@@ -42,6 +42,9 @@ audio:not([controls]) {
 template {
   display: none;
 }
+.modal {
+  overflow-y: auto !important;
+}
 a {
   background-color: transparent;
 }

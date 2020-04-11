@@ -15,7 +15,17 @@ $(document).ready(function() {
 
     $("#change-product-mainImage").change(function() {
         readURL(this);
-
+        var formData = new FormData();
+        NProgress.start();
+        formData.append('file', $("#change-product-mainImage")[0].files[0]);
+        axios.post("/api/upload/upload-image", formData).then(function(res){
+            NProgress.done();
+            if(res.data.success) {
+                $('.product-main-image').attr('src', res.data.link);
+            }
+        }, function(err){
+            NProgress.done();
+        });
     });
 
 
@@ -76,57 +86,46 @@ $(document).ready(function() {
             return;
         }
 
-        var formData = new FormData();
+        dataProduct.name = $('#input-product-name').val();
+        dataProduct.categoryId = $("#input-product-category").val();
+        dataProduct.brandId = $("#input-product-brand").val();
+        dataProduct.userId = $("#input-product-user").val();
+        dataProduct.mainImage = $('.product-main-image').attr('src');
+        dataProduct.price = $("#input-product-price").val();
+        dataProduct.amount = $("#input-product-amount").val();
+        dataProduct.shortDesc = CKEDITOR.instances['input-product-shortDesc'].getData();
+        dataProduct.description = CKEDITOR.instances['input-product-desc'].getData();
         NProgress.start();
-        formData.append('file', $("#change-product-mainImage")[0].files[0]);
-        axios.post("/api/upload/upload-image", formData).then(function(res){
+        console.log(dataProduct.id);
+        var linkPost = "/api/product/create";
+        if(dataProduct.id) {
+            linkPost = "/api/product/update/" + dataProduct.id;
+        }
+
+        axios.post(linkPost, dataProduct).then(function(res){
             NProgress.done();
             if(res.data.success) {
-                dataProduct.name = $('#input-product-name').val();
-                dataProduct.categoryId = $("#input-product-category").val();
-                dataProduct.brandId = $("#input-product-brand").val();
-                dataProduct.userId = $("#input-product-user").val();
-                dataProduct.mainImage = res.data.link;
-                dataProduct.price = $("#input-product-price").val();
-                dataProduct.amount = $("#input-product-amount").val();
-                dataProduct.shortDesc = CKEDITOR.instances['input-product-shortDesc'].getData();
-                dataProduct.description = CKEDITOR.instances['input-product-desc'].getData();
-                NProgress.start();
-                console.log(dataProduct.id);
-                var linkPost = "/api/product/create";
-                if(dataProduct.id) {
-                    linkPost = "/api/product/update/" + dataProduct.id;
-                }
-
-                axios.post(linkPost, dataProduct).then(function(res){
-                    NProgress.done();
-                    if(res.data.success) {
-                        swal(
-                            'Good job!',
-                            res.data.message,
-                            'success'
-                        ).then(function() {
-                            location.reload();
-                        });
-                    } else {
-                        swal(
-                            'Error',
-                            res.data.message,
-                            'error'
-                        );
-                    }
-                }, function(err){
-                    NProgress.done();
-                    swal(
-                        'Error',
-                        'Some error when saving product',
-                        'error'
-                    );
+                swal(
+                    'Good job!',
+                    res.data.message,
+                    'success'
+                ).then(function() {
+                    location.reload();
                 });
+            } else {
+                swal(
+                    'Error',
+                    res.data.message,
+                    'error'
+                );
             }
-
         }, function(err){
             NProgress.done();
+            swal(
+                'Error',
+                'Some error when saving product',
+                'error'
+            );
         });
 
     });

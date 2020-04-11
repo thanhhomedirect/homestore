@@ -29,7 +29,7 @@
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
-                    <a th:href="@{/admin}" class="site_title"><i class="fa fa-paw"></i> <span>Amado!</span></a>
+                    <a th:href="@{/admin}" class="site_title"><i class="fa fa-paw"></i> <span>HomeStore!</span></a>
                 </div>
 
                 <div class="clearfix"></div>
@@ -99,7 +99,7 @@
                     <h1>Product Management</h1>
                 </div>
 
-                <button type="button" class="btn btn-primary" id="new-product" data-toggle="modal" style="margin-bottom: 20px" data-target="#exampleModalLong">
+                <button type="button" class="btn btn-primary" id="new-product" data-toggle="modal" style="margin-bottom: 20px" data-target="#exampleModalLongHome">
                     Add new product
                 </button>
 
@@ -130,7 +130,7 @@
                                 <td th:text="${product.getPrice() + ' $'}"></td>
                                 <td th:text="${product.getCreatedDate()}"></td>
                                 <td class="text-center">
-                                    <i class="fa fa-edit tooltip-test edit-product" th:attr="data-product = ${product.getId()}" data-toggle="modal" title="Edit product" data-target="#exampleModalLong" style="cursor: pointer"></i>
+                                    <i class="fa fa-edit tooltip-test edit-product" th:attr="data-product = ${product.getId()}" data-toggle="modal" title="Edit product" data-target="#exampleModalLongHome" style="cursor: pointer"></i>
                                     <a th:href="@{'/admin/product-image/productId=' + ${product.getId()}}">
                                         <i class="fa fa-image tooltip-test" title="List images"></i>
                                     </a>
@@ -142,7 +142,7 @@
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal fade" id="exampleModalLongHome" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" style="overflow: auto !important;">
                 <div class="modal-dialog" role="document" style="width: 1000px; font-size: 15px">
                     <div class="modal-content">
                         <div class="modal-header">

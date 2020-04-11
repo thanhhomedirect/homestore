@@ -15,7 +15,17 @@ $(document).ready(function() {
 
     $("#change-category-mainImage").change(function() {
         readURL(this);
-
+        var formData = new FormData();
+        NProgress.start();
+        formData.append('file', $("#change-category-mainImage")[0].files[0]);
+        axios.post("/api/upload/upload-image", formData).then(function(res){
+            NProgress.done();
+            if(res.data.success) {
+                $('.category-main-image').attr('src', res.data.link);
+            }
+        }, function(err){
+            NProgress.done();
+        });
     });
 
 
@@ -47,65 +57,54 @@ $(document).ready(function() {
             }
         }, function(err){
             NProgress.done();
-        })
+        });
     });
 
     $(".btn-save-category").on("click", function () {
         if($("#input-category-name").val() === ""  ) {
             swal(
                 'Error',
-                'You need to fill name ',
+                'You need to fill name',
                 'error'
             );
             return;
         }
 
-        var formData = new FormData();
+        dataCategory.name = $('#input-category-name').val();
+        dataCategory.shortDesc = $('#input-category-desc').val();
+        dataCategory.mainImage = $('.category-main-image').attr('src');
         NProgress.start();
-        formData.append('file', $("#change-category-mainImage")[0].files[0]);
-        axios.post("/api/upload/upload-image", formData).then(function(res){
+        console.log(dataCategory.id);
+        var linkPost = "/api/category/create";
+        if(dataCategory.id) {
+            linkPost = "/api/category/update/" + dataCategory.id;
+        }
+
+        axios.post(linkPost, dataCategory).then(function(res){
             NProgress.done();
             if(res.data.success) {
-                dataCategory.name = $('#input-category-name').val();
-                dataCategory.shortDesc = $('#input-category-desc').val();
-                dataCategory.mainImage = res.data.link;
-                NProgress.start();
-                console.log(dataCategory.id);
-                var linkPost = "/api/category/create";
-                if(dataCategory.id) {
-                    linkPost = "/api/category/update/" + dataCategory.id;
-                }
-
-                axios.post(linkPost, dataCategory).then(function(res){
-                    NProgress.done();
-                    if(res.data.success) {
-                        swal(
-                            'Good job!',
-                            res.data.message,
-                            'success'
-                        ).then(function() {
-                            location.reload();
-                        });
-                    } else {
-                        swal(
-                            'Error',
-                            res.data.message,
-                            'error'
-                        );
-                    }
-                }, function(err){
-                    NProgress.done();
-                    swal(
-                        'Error',
-                        'Some error when saving category',
-                        'error'
-                    );
+                swal(
+                    'Good job!',
+                    res.data.message,
+                    'success'
+                ).then(function() {
+                    location.reload();
                 });
+            } else {
+                swal(
+                    'Error',
+                    res.data.message,
+                    'error'
+                );
             }
         }, function(err){
             NProgress.done();
+            swal(
+                'Error',
+                'Some error when saving category',
+                'error'
+            );
         });
-
     });
 
 });

@@ -74,7 +74,7 @@ public class MailService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
         try {
-            helper.setFrom("diemhuong10897@gmail.com");
+            helper.setFrom("thanhtran.kma@gmail.com");
             helper.setTo(emailAddress);
             helper.setSubject("Hi");
             helper.setText("How are you?");

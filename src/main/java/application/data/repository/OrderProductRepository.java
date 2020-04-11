@@ -19,8 +19,7 @@ public interface OrderProductRepository extends JpaRepository<OrderProduct,Integ
             "LIMIT 10", nativeQuery = true)
     List<OrderProduct> getListFeaturedProductByAmount();
 
-//    @Query(value = "SELECT order_product_id, product_id, sum(amount) as sum_amount, sum(price) as sum_price " +
-//                    "FROM dbo_order_product op " +
-//                    "GROUP BY op.product_id", nativeQuery = true);
-//    List<OrderProduct> getListProductsSold();
+//    @Query("SELECT o, op, p, sum(op.amount) FROM dbo_order_product op "+
+//            "INNER JOIN dbo_product p ")
+
 }
