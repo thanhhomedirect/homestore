@@ -59,3 +59,7 @@
 2020-Apr-11 19:35:11 PM [restartedMain] DEBUG application.Application - Start main ---------------- 
 2020-Apr-11 19:47:40 PM [main] DEBUG application.Application - Start main ---------------- 
 2020-Apr-11 19:47:41 PM [restartedMain] DEBUG application.Application - Start main ---------------- 
+2020-Apr-11 20:52:50 PM [main] DEBUG application.Application - Start main ---------------- 
+2020-Apr-11 20:52:51 PM [restartedMain] DEBUG application.Application - Start main ---------------- 
+2020-Apr-11 21:02:17 PM [main] DEBUG application.Application - Start main ---------------- 
+2020-Apr-11 21:02:18 PM [restartedMain] DEBUG application.Application - Start main ---------------- 
