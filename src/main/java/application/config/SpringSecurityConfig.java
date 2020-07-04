@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.*;
@@ -50,26 +51,36 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        logger.info("-----configure(HttpSecurity http)");
 
-        http.authorizeRequests()
-            .antMatchers("/**").permitAll()
-            .antMatchers("/admin/**").hasAnyRole("ADMIN")
-            .antMatchers("/user/**").hasAnyRole("USER")
-            .anyRequest().authenticated()
-            .and()
-            .formLogin().loginPage("/login")
-                //.defaultSuccessUrl("/product/1")
-                //.successHandler(new RefererRedirectionAuthenticationSuccessHandler())
-            .permitAll()
-            .and().rememberMe().rememberMeParameter("remember-me").key("uniqueAndSecret").tokenValiditySeconds(129600).userDetailsService(userDetailsService)
-            .and()
-            .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/")
-            .deleteCookies("guid")
-            .deleteCookies("JSESSIONID")
-            .permitAll()
-            .and().csrf().disable()
-            .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+        // Trang /user/** yêu cầu phải login với vai trò ROLE_USER hoặc ROLE_ADMIN.
+        // Nếu chưa login, nó sẽ redirect tới trang /login.
+        http.authorizeRequests().antMatchers("/user/**")
+                .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
+
+        // Trang chỉ dành cho ADMIN
+        http.authorizeRequests().antMatchers("/admin")
+                .access("hasRole('ADMIN')");
+
+        http
+                .authorizeRequests()
+                .antMatchers("/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().loginPage("/login")
+                .permitAll()
+                .and().rememberMe().rememberMeParameter("remember-me").key("uniqueAndSecret").tokenValiditySeconds(129600).userDetailsService(userDetailsService)
+                .and()
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/")
+                .deleteCookies("guid")
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+                .and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+
+        http.csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+
+        http.headers().xssProtection();
     }
 
     @Override
